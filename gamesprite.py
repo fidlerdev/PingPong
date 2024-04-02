@@ -2,22 +2,24 @@ import pygame as pg
 from settings import *
 
 class GameSprite(pg.sprite.Sprite):
-
     def __init__(
             self,
-            window: pg.Surface,
+            game,
             image_path: str,
             pos: PSize,
             size: PSize,
-            speed: int    
+            speed: float
             ) -> None:
-        self.window = window
+        super().__init__()
+        self.game = game
         self.image = pg.transform.scale(pg.image.load(image_path), size=(size.x, size.y))
-        self.pos = pos
+        self.size = size
         self.speed = speed
         self.rect = self.image.get_rect()
+        self.rect.x = pos.x
+        self.rect.y = pos.y
 
     
     def draw(self):
-        self.window.blit(self.image, (self.pos.x, self.pos.y))
+        self.game.window.blit(self.image, (self.rect.x, self.rect.y))
         

@@ -1,6 +1,7 @@
 import pygame as pg
 from settings import *
 from player import Player
+from ball import Ball
 
 class Game:
 
@@ -17,28 +18,40 @@ class Game:
         '''
         # Переменная игрового цикла
         self.run_game = True
+        # Кто последний дотронулся до мяча 
+        self.who_touched_last = None
         self.bg = pg.transform.scale(
             pg.image.load('pics/bg.jpg'),
             (W_WIDTH, W_HEIGHT)
         )
         self.playerL = Player(
-            window=self.window,
+            game=self,
             image_path='pics/left-block.png',
             pos=PSize(
-                x=10, y=(W_WIDTH // 2 - 100) 
+                x=10, y=(W_WIDTH // 2 - PLAYER_HEIGHT // 2) 
             ),
-            size=PSize(x=40, y=200),
-            speed=5
+            size=PSize(x=PLAYER_WIDTH, y=PLAYER_HEIGHT),
+            speed=PLAYER_SPEED
         )
         self.playerR = Player(
-            window=self.window,
+            game=self,
             image_path='pics/right-block.png',
             pos=PSize(
-                x=(W_WIDTH-40-10), y=(W_WIDTH // 2 - 100) 
+                x=(W_WIDTH-PLAYER_WIDTH-10), y=(W_WIDTH // 2 - PLAYER_HEIGHT // 2) 
             ),
-            size=PSize(x=40, y=200),
-            speed=5
+            size=PSize(x=PLAYER_WIDTH, y=PLAYER_HEIGHT),
+            speed=PLAYER_SPEED
         )
+        self.ball = Ball(
+            game=self,
+            image_path='pics/ball.png',
+            pos=PSize(W_WIDTH // 2, W_HEIGHT // 2),
+            size=PSize(BALL_WIDTH, BALL_HEIGHT),
+            speed=BALL_SPEED
+        )
+        self.players = pg.sprite.Group()
+        self.players.add(self.playerL)
+        self.players.add(self.playerR)
       
       
 
@@ -63,7 +76,8 @@ class Game:
                 down=pg.K_DOWN
             )
         )
-
+        self.ball.update()
+        pg.display.set_caption(f'{self.clock.get_fps() :.1f}')
         pg.display.flip()
 
     
@@ -74,15 +88,17 @@ class Game:
         self.window.blit(self.bg, (0, 0))
         self.playerL.draw()
         self.playerR.draw()
+        self.ball.draw()
 
     def run(self):
         '''
         Запуск игрового цикла
         '''
         while self.run_game:
+            self.delta_time = self.clock.tick(FPS)
             self.update()
             self.draw()
-            self.clock.tick(FPS)
+            print(f'{self.delta_time = }')
     
 
 if __name__ == '__main__':
