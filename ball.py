@@ -1,7 +1,7 @@
 import pygame as pg
 from gamesprite import GameSprite
 from settings import *
-from random import random, seed
+from random import random, seed, choice
 from math import tau, cos, sin, pi
 from time import time
 from player import Player
@@ -17,9 +17,15 @@ class Ball(GameSprite):
                 ) -> None:
         super().__init__(game, image_path, pos, size, speed)
         seed(time())
-        self.angle = random() * tau
-        self.last_angle_change = pg.time.get_ticks()
-        self.angle_change_delay = 400
+        # Рандомно выбираем сторону угол в одной из 4 четвертей
+        self.angle = choice(
+            [
+                random() * pi / 2 - 1 - .5,
+                pi / 2 + random() * pi / 2 + .5,
+                pi + random() * pi / 2 + .5,
+                3 * pi / 2 + random() * pi / 2 - .5,
+            ]
+        )
         
     def update(self) -> None:
         now = pg.time.get_ticks()
@@ -29,21 +35,18 @@ class Ball(GameSprite):
         # Коллизия с верхней и нижней стеной
         if (self.rect.y >= W_HEIGHT - self.rect.width or
             self.rect.y <= 0):
-            
-            if now - self.last_angle_change < self.angle_change_delay:
-                return
+            self.last_angle_change = now
             
             self.angle = pi - self.angle
             self.speed = -self.speed
-            self.last_angle_change = now
         
         # Коллизия с игроком
         playerCol: list[Player] = pg.sprite.spritecollide(self, self.game.players, False)
+
         if playerCol:
-            self.angle = random() * tau
+            self.angle = tau - self.angle
             self.speed = -self.speed
             self.game.who_touched_last = playerCol[0]
-            print(playerCol[0].rect.x)
             
         # Мяч улетает за экран (пока оба случая)
         if self.rect.x > W_WIDTH or self.rect.x + self.rect.width < 0:

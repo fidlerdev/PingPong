@@ -98,7 +98,6 @@ class Game:
             self.delta_time = self.clock.tick(FPS)
             self.update()
             self.draw()
-            print(f'{self.delta_time = }')
     
 
 if __name__ == '__main__':

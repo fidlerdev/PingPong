@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 FPS = 30
-W_WIDTH = 1280
+W_WIDTH = 800
 W_HEIGHT = 720
 
 PLAYER_SPEED = 0.4
