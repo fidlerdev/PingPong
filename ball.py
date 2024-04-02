@@ -28,6 +28,7 @@ class Ball(GameSprite):
         )
         
         self.spawn_time = pg.time.get_ticks()
+        self.player_hit_time = pg.time.get_ticks()
         
     def update(self) -> None:
         self.rect.x += cos(self.angle) * self.speed * self.game.delta_time
@@ -35,7 +36,7 @@ class Ball(GameSprite):
         
         # Чем дольше мяч живет, тем быстрее он становится
         now: int = pg.time.get_ticks()
-        multiplier: float = (now - self.spawn_time) / 1000000
+        multiplier: float = (now - self.spawn_time) / 10000000
         # Если скорость не больше максимальной
         if abs(self.speed) <= BALL_MAX_SPEED:
             self.speed *= (1 + multiplier)
@@ -51,10 +52,12 @@ class Ball(GameSprite):
         # Коллизия с игроком
         playerCol: list[Player] = pg.sprite.spritecollide(self, self.game.players, False)
 
-        if playerCol:
+        if playerCol and (now - self.player_hit_time) > PLAYER_HIT_DELAY:
             self.angle = tau - self.angle
             self.speed = -self.speed
             self.game.who_touched_last = playerCol[0]
+            self.player_hit_time = now
+            choice(self.game.audio.hit_sounds).play()
             
         # Мяч улетает за экран (пока оба случая)
         if self.rect.x > W_WIDTH or self.rect.x + self.rect.width < 0:
