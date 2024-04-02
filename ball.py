@@ -27,10 +27,18 @@ class Ball(GameSprite):
             ]
         )
         
+        self.spawn_time = pg.time.get_ticks()
+        
     def update(self) -> None:
-        now = pg.time.get_ticks()
         self.rect.x += cos(self.angle) * self.speed * self.game.delta_time
         self.rect.y += sin(self.angle) * self.speed * self.game.delta_time
+        
+        # Чем дольше мяч живет, тем быстрее он становится
+        now: int = pg.time.get_ticks()
+        multiplier: float = (now - self.spawn_time) / 1000000
+        # Если скорость не больше максимальной
+        if abs(self.speed) <= BALL_MAX_SPEED:
+            self.speed *= (1 + multiplier)
         
         # Коллизия с верхней и нижней стеной
         if (self.rect.y >= W_HEIGHT - self.rect.width or
@@ -53,5 +61,10 @@ class Ball(GameSprite):
             self.angle = random() * tau
             self.rect.x = W_WIDTH // 2 - self.rect.width // 2
             self.rect.y = W_HEIGHT // 2 - self.rect.height // 2
+            # Восстанавливаем скорость при выходе за игровое поле
+            self.spawn_time = now
+            self.speed = BALL_SPEED
+            
+            
             
             
