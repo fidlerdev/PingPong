@@ -37,7 +37,7 @@ class Game:
             pos=PSize(x=10, y=(W_WIDTH // 2 - PLAYER_HEIGHT // 2)),
             size=PSize(x=PLAYER_WIDTH, y=PLAYER_HEIGHT),
             speed=PLAYER_SPEED,
-            btns=DirButtons(up=pg.K_w, down=pg.K_s, left=pg.K_a, right=pg.K_d, side=Side.LEFT),
+            btns=DirButtons(up=pg.K_w, down=pg.K_s),
         )
         self.playerR = Player(
             game=self,
@@ -48,8 +48,7 @@ class Game:
             size=PSize(x=PLAYER_WIDTH, y=PLAYER_HEIGHT),
             speed=PLAYER_SPEED,
             btns=DirButtons(
-                up=pg.K_UP, down=pg.K_DOWN, left=pg.K_LEFT, right=pg.K_RIGHT, side=Side.RIGHT
-            ),
+                up=pg.K_UP, down=pg.K_DOWN),
         )
         self.ball = Ball(
             game=self,

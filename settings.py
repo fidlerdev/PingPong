@@ -12,7 +12,6 @@ BALL_MAX_SPEED = 1400
 
 PLAYER_SPEED = 500
 PLAYER_HIT_DELAY = 500
-DANGLE = 1
 
 MAX_BG_RATIO = 1.2
 MIN_BG_RATIO = 1.0
@@ -34,20 +33,7 @@ class PSize:
     x: int
     y: int
 
-
-class Side(Enum):
-    LEFT = 'left'
-    RIGHT = 'right'
-
 @dataclass
 class DirButtons:
     up: int
     down: int
-    left: int
-    right: int
-    side: Side
-
-
-class ArrowSign(Enum):
-    RIGHT = '→'
-    LEFT  = '←'

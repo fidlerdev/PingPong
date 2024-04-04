@@ -56,7 +56,6 @@ class Ball(GameSprite):
 
         if playerCol and (now - self.player_hit_time) > PLAYER_HIT_DELAY:
             self.angle = tau - self.angle
-            # self.angle = radians(playerCol[0].arrow_angle)
             self.speed = -self.speed
             self.game.who_touched_last = playerCol[0]
             self.player_hit_time = now
